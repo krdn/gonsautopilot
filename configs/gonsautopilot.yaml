@@ -1,0 +1,45 @@
+# GonsAutoPilot 설정 파일 템플릿
+# 프로젝트 루트에 gonsautopilot.yaml로 복사하여 사용
+
+project:
+  name: "my-webapp"
+  type: "fullstack"           # fullstack | backend | frontend
+
+test:
+  unit:
+    command: "npm test"
+    coverage_threshold: 80    # 80% 미만이면 실패
+    enabled: true
+  e2e:
+    command: "npx playwright test"
+    browser: "chromium"
+    enabled: true
+  performance:
+    tool: "lighthouse"
+    min_score: 70
+    enabled: true
+  security:
+    enabled: true
+    audit: true               # npm audit
+
+build:
+  docker:
+    frontend: "./Dockerfile.frontend"
+    backend: "./Dockerfile.backend"
+  tag_strategy: "git-sha"     # git-sha | semver | timestamp
+
+deploy:
+  target: "192.168.0.5"
+  method: "docker-compose"
+  compose_file: "docker-compose.prod.yml"
+  health_check:
+    url: "http://localhost:3000/health"
+    timeout: 60
+    retries: 3
+
+safety:
+  auto_rollback: true
+  max_consecutive_failures: 3  # 3회 연속 실패 시 사람에게 알림
+  notify:
+    email: true
+    method: "/notify-important"

@@ -1,0 +1,15 @@
+{
+  "pipelines": [],
+  "current": null,
+  "lock": {
+    "locked": false,
+    "reason": null,
+    "locked_at": null
+  },
+  "stats": {
+    "total_runs": 0,
+    "success_count": 0,
+    "failure_count": 0,
+    "consecutive_failures": 0
+  }
+}

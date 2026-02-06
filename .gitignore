@@ -1,0 +1,17 @@
+# Runtime / temp
+test-results/
+/tmp/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (대상 프로젝트용)
+node_modules/

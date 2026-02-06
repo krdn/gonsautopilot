@@ -1,0 +1,68 @@
+{
+  "name": "gonsautopilot",
+  "version": "0.1.0",
+  "description": "Claude Code 플러그인 기반 풀스택 자동 테스트/배포 시스템",
+  "author": "gon",
+  "skills": [
+    {
+      "name": "gonsautopilot",
+      "description": "전체 파이프라인 실행 (분석→테스트→빌드→배포→검증)",
+      "file": "skills/gonsautopilot-run.md"
+    },
+    {
+      "name": "gonsautopilot:test",
+      "description": "테스트만 실행",
+      "file": "skills/gonsautopilot-test.md"
+    },
+    {
+      "name": "gonsautopilot:deploy",
+      "description": "빌드+배포만 실행 (테스트 통과 전제)",
+      "file": "skills/gonsautopilot-deploy.md"
+    },
+    {
+      "name": "gonsautopilot:status",
+      "description": "마지막 파이프라인 상태 조회",
+      "file": "skills/gonsautopilot-status.md"
+    },
+    {
+      "name": "gonsautopilot:rollback",
+      "description": "이전 버전으로 즉시 롤백",
+      "file": "skills/gonsautopilot-rollback.md"
+    }
+  ],
+  "agents": [
+    {
+      "name": "gap-orchestrator",
+      "description": "파이프라인 총괄 Agent - 흐름 제어, 상태 관리, 의사결정",
+      "file": "agents/orchestrator.md"
+    },
+    {
+      "name": "gap-test-agent",
+      "description": "테스트 전문 Agent - 단위/통합/E2E/성능/보안 테스트",
+      "file": "agents/test-agent.md"
+    },
+    {
+      "name": "gap-build-agent",
+      "description": "빌드 전문 Agent - Docker 이미지 빌드 및 태깅",
+      "file": "agents/build-agent.md"
+    },
+    {
+      "name": "gap-deploy-agent",
+      "description": "배포 전문 Agent - SSH 배포, Compose 업데이트, 카나리 배포",
+      "file": "agents/deploy-agent.md"
+    },
+    {
+      "name": "gap-monitor-agent",
+      "description": "모니터링 Agent - 배포 후 검증, 와치독, 자동 롤백",
+      "file": "agents/monitor-agent.md"
+    }
+  ],
+  "hooks": {
+    "pre-commit": "hooks/pre-commit.sh",
+    "post-push": "hooks/post-push.sh"
+  },
+  "config": {
+    "state_dir": "state",
+    "config_file": "gonsautopilot.yaml"
+  }
+}
