@@ -1,10 +1,12 @@
+---
+description: 파이프라인 상태/배포이력/통계 조회
+argument-hint: [deployments|stats|full]
+allowed-tools: [Bash, Read]
+---
+
 # /gonsautopilot:status — 파이프라인 상태 조회
 
 현재 또는 마지막 파이프라인의 상태를 보여줍니다.
-
-## 실행 방법
-
-사용자가 `/gonsautopilot:status`를 호출하면 이 스킬이 실행됩니다.
 
 ## 옵션
 
@@ -18,7 +20,7 @@
 ### Step 1: 상태 조회
 
 ```bash
-PLUGIN_DIR="<gonsautopilot 플러그인 경로>/plugin"
+PLUGIN_DIR="${CLAUDE_PLUGIN_ROOT}"
 LIB="${PLUGIN_DIR}/lib"
 
 # 옵션 파싱
@@ -57,11 +59,11 @@ esac
   완료:      <finished_at>
 
   ┌─ Stages
-  │  analyze:  ✅ passed
-  │  test:     ✅ passed
-  │  build:    ✅ passed
-  │  deploy:   🔄 running
-  │  verify:   ⏳ pending
+  │  analyze:  passed
+  │  test:     passed
+  │  build:    passed
+  │  deploy:   running
+  │  verify:   pending
   │
   ├─ Changes
   │  frontend: 3 files
@@ -81,7 +83,7 @@ esac
 파이프라인이 잠긴 경우 추가로 표시합니다:
 
 ```
-  🔒 파이프라인 잠금 상태
+  파이프라인 잠금 상태
      이유: 연속 3회 배포 실패
      잠금 시각: 2026-02-06T15:30:00+09:00
      해제: /gonsautopilot:unlock 실행

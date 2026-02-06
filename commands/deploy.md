@@ -1,10 +1,11 @@
+---
+description: 빌드+배포만 실행 (테스트 통과 전제)
+allowed-tools: [Bash, Read, Glob, Grep, Task]
+---
+
 # /gonsautopilot:deploy — 빌드+배포 실행
 
 빌드와 배포를 실행합니다 (최근 테스트 통과 전제).
-
-## 실행 방법
-
-사용자가 `/gonsautopilot:deploy`를 호출하면 이 스킬이 실행됩니다.
 
 ## 사전 조건
 
@@ -16,7 +17,7 @@
 ### Step 1: 설정 로드 및 사전 조건 확인
 
 ```bash
-PLUGIN_DIR="<gonsautopilot 플러그인 경로>/plugin"
+PLUGIN_DIR="${CLAUDE_PLUGIN_ROOT}"
 LIB="${PLUGIN_DIR}/lib"
 
 # 설정 로드
@@ -82,7 +83,7 @@ TAGS=$(echo "$BUILD_REPORT" | jq '.tags')
 ```bash
 ${LIB}/state-manager.sh pipeline-update-stage "$PID" "deploy" "running"
 
-# 배포 실행 (pre-deploy gate → 이미지 전송 → 카나리 배포)
+# 배포 실행 (pre-deploy gate -> 이미지 전송 -> 카나리 배포)
 DEPLOY_REPORT=$(${LIB}/deploy-executor.sh execute "$PID" "$TAGS" "$CONFIG")
 
 # 배포 결과 출력
@@ -100,7 +101,7 @@ if [ "$DEPLOY_STATUS" = "failed" ]; then
   MAX_FAILURES=$(echo "$CONFIG" | jq -r '.safety.max_consecutive_failures // 3')
 
   if [ "$CONSECUTIVE" -ge "$MAX_FAILURES" ]; then
-    echo "⚠️ 연속 ${CONSECUTIVE}회 실패! 에스컬레이션 실행."
+    echo "연속 ${CONSECUTIVE}회 실패! 에스컬레이션 실행."
     ${LIB}/state-manager.sh pipeline-lock "연속 ${CONSECUTIVE}회 실패"
     ${LIB}/notify.sh escalation "배포 연속 ${CONSECUTIVE}회 실패"
   fi

@@ -1,10 +1,11 @@
+---
+description: 테스트만 실행 (변경 분석 + 테스트 + 리포트)
+allowed-tools: [Bash, Read, Glob, Grep, Task]
+---
+
 # /gonsautopilot:test — 테스트 자동 실행
 
 변경 분석 + 테스트 실행 + 리포트 출력을 수행합니다 (빌드/배포 없이).
-
-## 실행 방법
-
-사용자가 `/gonsautopilot:test`를 호출하면 이 스킬이 실행됩니다.
 
 ## 전체 실행 흐름
 
@@ -13,7 +14,7 @@
 ### Step 1: 설정 로드 및 파이프라인 생성
 
 ```bash
-PLUGIN_DIR="<gonsautopilot 플러그인 경로>/plugin"
+PLUGIN_DIR="${CLAUDE_PLUGIN_ROOT}"
 LIB="${PLUGIN_DIR}/lib"
 
 # 설정 로드

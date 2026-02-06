@@ -1,10 +1,13 @@
+---
+description: 이전 버전으로 즉시 롤백
+argument-hint: [service-name]
+allowed-tools: [Bash, Read]
+---
+
 # /gonsautopilot:rollback — 수동 롤백
 
 이전 안정 버전으로 즉시 롤백합니다.
 
-## 실행 방법
-
-사용자가 `/gonsautopilot:rollback`을 호출하면 이 스킬이 실행됩니다.
 특정 서비스만 롤백: `/gonsautopilot:rollback frontend`
 
 ## 전체 실행 흐름
@@ -12,7 +15,7 @@
 ### Step 1: 설정 로드 및 롤백 대상 확인
 
 ```bash
-PLUGIN_DIR="<gonsautopilot 플러그인 경로>/plugin"
+PLUGIN_DIR="${CLAUDE_PLUGIN_ROOT}"
 LIB="${PLUGIN_DIR}/lib"
 
 # 설정 로드
@@ -33,7 +36,7 @@ echo "  GonsAutoPilot — Rollback"
 echo "═══════════════════════════════════════════"
 echo ""
 echo "  롤백 가능한 서비스:"
-echo "$REGISTRY" | jq -r '.services | to_entries[] | "  - \(.key): \(.value.current) → \(.value.previous)"'
+echo "$REGISTRY" | jq -r '.services | to_entries[] | "  - \(.key): \(.value.current) -> \(.value.previous)"'
 echo ""
 ```
 
@@ -53,10 +56,10 @@ else
     STATUS=$(echo "$RESULT" | jq -r '.status')
     if [ "$STATUS" = "success" ]; then
       TAG=$(echo "$RESULT" | jq -r '.restored_tag')
-      echo "  ✅ $SVC → $TAG"
+      echo "  $SVC -> $TAG (성공)"
     else
       ERROR=$(echo "$RESULT" | jq -r '.error')
-      echo "  ❌ $SVC 롤백 실패: $ERROR"
+      echo "  $SVC 롤백 실패: $ERROR"
     fi
   done
 fi

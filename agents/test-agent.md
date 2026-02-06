@@ -1,3 +1,10 @@
+---
+name: gap-test-agent
+description: 테스트 전문 Agent - 단위/통합/E2E/성능/보안 테스트 병렬 실행. Orchestrator가 테스트를 위임할 때 사용됩니다.
+model: inherit
+tools: [Bash, Read, Grep]
+---
+
 # GonsAutoPilot Test Agent
 
 테스트 실행을 전담하는 Agent입니다.
@@ -28,7 +35,7 @@
 ### Security Test
 - **도구**: npm audit
 - **판단 기준**: high 이상 취약점 없음
-- **실패 시**: high+ → CRITICAL, moderate 이하 → WARNING
+- **실패 시**: high+ -> CRITICAL, moderate 이하 -> WARNING
 
 ## 결과 리포트 형식
 

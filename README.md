@@ -4,6 +4,16 @@ Claude Code 플러그인 기반 풀스택 자동 테스트/배포 시스템
 
 git push 한 번으로 **분석 → 테스트 → 빌드 → 배포 → 검증**까지 AI가 자동 처리합니다.
 
+## 설치
+
+```bash
+# 마켓플레이스 등록
+/plugin marketplace add krdn/gonsautopilot
+
+# 플러그인 설치
+/plugin install gonsautopilot@gonsautopilot
+```
+
 ## 주요 기능
 
 - **스마트 변경 분석** — git diff 기반으로 변경 파일을 카테고리별 분류, 필요한 테스트만 선택 실행
@@ -27,7 +37,7 @@ ANALYZE → TEST → BUILD → DEPLOY → VERIFY
 
 ## 사용법
 
-### 스킬 명령어
+### 슬래시 명령어
 
 | 명령어 | 설명 |
 |--------|------|
@@ -108,49 +118,48 @@ Orchestrator Agent
 └── Monitor Agent   → 스모크 테스트 + 와치독 + 자동 롤백
 ```
 
-### 프로젝트 구조
+### 프로젝트 구조 (마켓플레이스 표준)
 
 ```
 gonsautopilot/
-├── plugin/
-│   ├── agents/              # Agent 정의 (5개)
-│   │   ├── orchestrator.md
-│   │   ├── test-agent.md
-│   │   ├── build-agent.md
-│   │   ├── deploy-agent.md
-│   │   └── monitor-agent.md
-│   ├── skills/              # 사용자 호출 스킬 (5개)
-│   │   ├── gonsautopilot-run.md
-│   │   ├── gonsautopilot-test.md
-│   │   ├── gonsautopilot-deploy.md
-│   │   ├── gonsautopilot-status.md
-│   │   └── gonsautopilot-rollback.md
-│   ├── lib/                 # 셸 유틸리티 (12개)
-│   │   ├── state-manager.sh
-│   │   ├── config-parser.sh
-│   │   ├── change-analyzer.sh
-│   │   ├── test-runners.sh
-│   │   ├── test-executor.sh
-│   │   ├── build-executor.sh
-│   │   ├── deploy-executor.sh
-│   │   ├── docker-utils.sh
-│   │   ├── monitor-executor.sh
-│   │   ├── status-reporter.sh
-│   │   ├── health-check.sh
-│   │   └── notify.sh
-│   ├── hooks/               # Git Hooks (2개)
-│   │   ├── pre-commit.sh
-│   │   └── post-push.sh
-│   ├── state/               # 런타임 상태
-│   │   ├── pipeline.json
-│   │   ├── deployments.json
-│   │   └── rollback-registry.json
-│   └── manifest.json
+├── .claude-plugin/
+│   └── plugin.json         # 플러그인 메타데이터 (필수)
+├── commands/               # 슬래시 명령어 (5개)
+│   ├── gonsautopilot.md    # /gonsautopilot (전체 파이프라인)
+│   ├── test.md             # /gonsautopilot:test
+│   ├── deploy.md           # /gonsautopilot:deploy
+│   ├── status.md           # /gonsautopilot:status
+│   └── rollback.md         # /gonsautopilot:rollback
+├── agents/                 # Agent 정의 (5개)
+│   ├── orchestrator.md     # gap-orchestrator
+│   ├── test-agent.md       # gap-test-agent
+│   ├── build-agent.md      # gap-build-agent
+│   ├── deploy-agent.md     # gap-deploy-agent
+│   └── monitor-agent.md    # gap-monitor-agent
+├── hooks/                  # 플러그인 훅
+│   ├── hooks.json          # 훅 설정
+│   ├── pre-commit.sh       # 커밋 전 품질 체크
+│   └── post-push.sh        # 푸시 후 자동 트리거
+├── lib/                    # 셸 유틸리티 (12개)
+│   ├── state-manager.sh
+│   ├── config-parser.sh
+│   ├── change-analyzer.sh
+│   ├── test-runners.sh
+│   ├── test-executor.sh
+│   ├── build-executor.sh
+│   ├── deploy-executor.sh
+│   ├── docker-utils.sh
+│   ├── monitor-executor.sh
+│   ├── status-reporter.sh
+│   ├── health-check.sh
+│   └── notify.sh
+├── state/                  # 런타임 상태
+│   ├── pipeline.json
+│   ├── deployments.json
+│   └── rollback-registry.json
 ├── configs/
-│   ├── gonsautopilot.yaml   # 설정 템플릿
-│   └── thresholds.yaml      # 품질 임계값
-├── docs/plans/
-│   └── 2026-02-06-gonsautopilot-design.md
+│   ├── gonsautopilot.yaml  # 설정 템플릿
+│   └── thresholds.yaml     # 품질 임계값
 ├── CLAUDE.md
 └── README.md
 ```

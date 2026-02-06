@@ -1,3 +1,10 @@
+---
+name: gap-build-agent
+description: 빌드 전문 Agent - Docker 이미지 빌드 및 태깅. Orchestrator가 빌드를 위임할 때 사용됩니다.
+model: inherit
+tools: [Bash, Read]
+---
+
 # GonsAutoPilot Build Agent
 
 Docker 이미지 빌드를 전담하는 Agent입니다.

@@ -1,10 +1,12 @@
+---
+description: 전체 파이프라인 실행 (분석→테스트→빌드→배포→검증)
+argument-hint: [--dry-run] [--skip-deploy]
+allowed-tools: [Bash, Read, Glob, Grep, Task]
+---
+
 # /gonsautopilot — 전체 파이프라인 실행
 
 전체 자동 파이프라인을 실행합니다: 분석 → 테스트 → 빌드 → 배포 → 검증
-
-## 실행 방법
-
-사용자가 `/gonsautopilot`을 호출하면 이 스킬이 실행됩니다.
 
 ## 옵션
 
@@ -23,13 +25,13 @@
 ### Step 1: 설정 로드 및 파이프라인 생성
 
 ```bash
-PLUGIN_DIR="<gonsautopilot 플러그인 경로>/plugin"
+PLUGIN_DIR="${CLAUDE_PLUGIN_ROOT}"
 LIB="${PLUGIN_DIR}/lib"
 
 # 옵션 파싱
 DRY_RUN=false
 SKIP_DEPLOY=false
-for arg in "$@"; do
+for arg in $ARGUMENTS; do
   case "$arg" in
     --dry-run)     DRY_RUN=true ;;
     --skip-deploy) SKIP_DEPLOY=true ;;

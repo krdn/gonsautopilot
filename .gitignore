@@ -3,6 +3,12 @@ test-results/
 /tmp/
 *.log
 
+# State (런타임 생성)
+state/pipeline.json
+state/deployments.json
+state/rollback-registry.json
+!state/.gitkeep
+
 # OS
 .DS_Store
 Thumbs.db

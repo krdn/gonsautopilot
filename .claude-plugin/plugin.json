@@ -1,0 +1,9 @@
+{
+  "name": "gonsautopilot",
+  "description": "Fullstack auto test/deploy pipeline - git push one shot for analyze, test, build, deploy, verify",
+  "version": "1.0.0",
+  "author": {
+    "name": "gon",
+    "email": "krdn.net@gmail.com"
+  }
+}

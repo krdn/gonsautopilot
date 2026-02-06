@@ -1,3 +1,10 @@
+---
+name: gap-monitor-agent
+description: 모니터링 Agent - 스모크 테스트, 와치독, 자동 롤백. Orchestrator가 배포 후 검증을 위임할 때 사용됩니다.
+model: inherit
+tools: [Bash, Read]
+---
+
 # GonsAutoPilot Monitor Agent
 
 배포 후 검증과 모니터링을 전담하는 Agent입니다.
@@ -14,10 +21,10 @@
 배포된 서비스의 핵심 엔드포인트를 검증합니다:
 
 ```
-1. GET /health → 200 OK 확인
+1. GET /health -> 200 OK 확인
 2. 주요 페이지 접근 확인 (gonsautopilot.yaml에서 정의)
 3. API 엔드포인트 기본 응답 확인
-4. 응답 시간 측정 → threshold 초과 시 경고
+4. 응답 시간 측정 -> threshold 초과 시 경고
 ```
 
 ## 30초 와치독 모니터링
@@ -45,7 +52,7 @@
 ## 에스컬레이션 정책
 
 ```
-실패 1회 → 자동 롤백 + 로그 저장
-실패 2회 → 자동 롤백 + 상세 분석 리포트
-실패 3회 → 파이프라인 잠금 + /notify-important 이메일 발송
+실패 1회 -> 자동 롤백 + 로그 저장
+실패 2회 -> 자동 롤백 + 상세 분석 리포트
+실패 3회 -> 파이프라인 잠금 + /notify-important 이메일 발송
 ```
