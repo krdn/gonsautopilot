@@ -5,18 +5,82 @@
 ## 실행 방법
 
 사용자가 `/gonsautopilot:rollback`을 호출하면 이 스킬이 실행됩니다.
+특정 서비스만 롤백: `/gonsautopilot:rollback frontend`
 
-## 실행 흐름
+## 전체 실행 흐름
 
-1. rollback-registry.json에서 각 서비스의 이전 이미지 태그 조회
-2. 사용자에게 롤백 대상 확인
-3. 운영서버에 이전 이미지로 Compose 배포
-4. 헬스체크 실행
-5. 결과 보고
+### Step 1: 설정 로드 및 롤백 대상 확인
+
+```bash
+PLUGIN_DIR="<gonsautopilot 플러그인 경로>/plugin"
+LIB="${PLUGIN_DIR}/lib"
+
+# 설정 로드
+CONFIG=$(${LIB}/config-parser.sh load)
+
+# 인자에서 서비스 이름 추출 (없으면 전체)
+SERVICE="${1:-all}"
+```
+
+### Step 2: 롤백 가능한 서비스 목록 조회
+
+```bash
+# rollback-registry.json에서 이전 이미지 목록 조회
+REGISTRY=$(cat ${PLUGIN_DIR}/state/rollback-registry.json)
+
+echo "═══════════════════════════════════════════"
+echo "  GonsAutoPilot — Rollback"
+echo "═══════════════════════════════════════════"
+echo ""
+echo "  롤백 가능한 서비스:"
+echo "$REGISTRY" | jq -r '.services | to_entries[] | "  - \(.key): \(.value.current) → \(.value.previous)"'
+echo ""
+```
+
+### Step 3: 롤백 실행
+
+```bash
+# 특정 서비스 롤백
+if [ "$SERVICE" != "all" ]; then
+  RESULT=$(${LIB}/deploy-executor.sh rollback "$SERVICE" "$CONFIG")
+  echo "$RESULT" | jq '.'
+else
+  # 모든 서비스 순차 롤백
+  SERVICES=$(echo "$REGISTRY" | jq -r '.services | keys[]')
+  for SVC in $SERVICES; do
+    echo "  롤백 중: $SVC"
+    RESULT=$(${LIB}/deploy-executor.sh rollback "$SVC" "$CONFIG")
+    STATUS=$(echo "$RESULT" | jq -r '.status')
+    if [ "$STATUS" = "success" ]; then
+      TAG=$(echo "$RESULT" | jq -r '.restored_tag')
+      echo "  ✅ $SVC → $TAG"
+    else
+      ERROR=$(echo "$RESULT" | jq -r '.error')
+      echo "  ❌ $SVC 롤백 실패: $ERROR"
+    fi
+  done
+fi
+```
+
+### Step 4: 헬스체크 및 결과
+
+```bash
+# 롤백 후 헬스체크
+HEALTH_URL=$(echo "$CONFIG" | jq -r '.deploy.health_check.url // "http://localhost:3000/health"')
+TIMEOUT=$(echo "$CONFIG" | jq -r '.deploy.health_check.timeout // 60')
+RETRIES=$(echo "$CONFIG" | jq -r '.deploy.health_check.retries // 3')
+
+${LIB}/docker-utils.sh health-check "$HEALTH_URL" "$TIMEOUT" "$RETRIES"
+
+echo ""
+echo "═══════════════════════════════════════════"
+echo "  롤백 완료"
+echo "═══════════════════════════════════════════"
+```
 
 ## 사용하는 도구
 
+- `lib/config-parser.sh` — 설정 파일 로드
 - `lib/state-manager.sh` — rollback-registry 조회
-- `lib/docker-utils.sh` — Docker Compose 배포
-- `lib/health-check.sh` — 헬스체크
-- `lib/notify.sh` — 알림
+- `lib/deploy-executor.sh` — 서비스 롤백 실행
+- `lib/docker-utils.sh` — 헬스체크
