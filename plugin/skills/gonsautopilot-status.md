@@ -6,30 +6,41 @@
 
 사용자가 `/gonsautopilot:status`를 호출하면 이 스킬이 실행됩니다.
 
-## 동작
+## 옵션
 
-1. `plugin/state/pipeline.json`에서 현재 파이프라인 상태를 읽습니다
-2. 파이프라인이 없으면 "실행된 파이프라인이 없습니다" 안내
-3. 파이프라인이 있으면 포맷팅된 상태 리포트를 출력합니다
+- `/gonsautopilot:status` — 현재 파이프라인 상태 (기본)
+- `/gonsautopilot:status deployments` — 배포 이력
+- `/gonsautopilot:status stats` — 성공률 통계
+- `/gonsautopilot:status full` — 전체 리포트
 
-## 실행 스크립트
+## 전체 실행 흐름
 
-다음 bash 명령어로 상태를 조회합니다:
+### Step 1: 상태 조회
 
 ```bash
-PLUGIN_DIR="$(find_plugin_dir)"
-STATE_FILE="${PLUGIN_DIR}/state/pipeline.json"
+PLUGIN_DIR="<gonsautopilot 플러그인 경로>/plugin"
+LIB="${PLUGIN_DIR}/lib"
 
-# 현재 파이프라인 조회
-CURRENT=$(jq -r '.current // empty' "$STATE_FILE")
+# 옵션 파싱
+MODE="${1:-status}"
 
-if [ -z "$CURRENT" ]; then
-  echo "실행된 파이프라인이 없습니다."
-  exit 0
-fi
-
-# 상태 출력
-jq --arg pid "$CURRENT" '.pipelines[] | select(.pipeline_id == $pid)' "$STATE_FILE"
+case "$MODE" in
+  status|"")
+    ${LIB}/status-reporter.sh status
+    ;;
+  deployments)
+    ${LIB}/status-reporter.sh deployments "${2:-10}"
+    ;;
+  stats|statistics)
+    ${LIB}/status-reporter.sh statistics
+    ;;
+  full)
+    ${LIB}/status-reporter.sh full
+    ;;
+  rollback)
+    ${LIB}/status-reporter.sh rollback-status
+    ;;
+esac
 ```
 
 ## 출력 형식
@@ -75,3 +86,7 @@ jq --arg pid "$CURRENT" '.pipelines[] | select(.pipeline_id == $pid)' "$STATE_FI
      잠금 시각: 2026-02-06T15:30:00+09:00
      해제: /gonsautopilot:unlock 실행
 ```
+
+## 사용하는 도구
+
+- `lib/status-reporter.sh` — 상태 포맷팅, 배포 이력, 통계

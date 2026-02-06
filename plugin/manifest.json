@@ -1,6 +1,6 @@
 {
   "name": "gonsautopilot",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Claude Code 플러그인 기반 풀스택 자동 테스트/배포 시스템",
   "author": "gon",
   "skills": [
@@ -21,7 +21,7 @@
     },
     {
       "name": "gonsautopilot:status",
-      "description": "마지막 파이프라인 상태 조회",
+      "description": "파이프라인 상태/배포이력/통계 조회",
       "file": "skills/gonsautopilot-status.md"
     },
     {
@@ -53,13 +53,27 @@
     },
     {
       "name": "gap-monitor-agent",
-      "description": "모니터링 Agent - 배포 후 검증, 와치독, 자동 롤백",
+      "description": "모니터링 Agent - 스모크 테스트, 와치독, 자동 롤백",
       "file": "agents/monitor-agent.md"
     }
   ],
   "hooks": {
     "pre-commit": "hooks/pre-commit.sh",
     "post-push": "hooks/post-push.sh"
+  },
+  "lib": {
+    "state-manager": "lib/state-manager.sh",
+    "config-parser": "lib/config-parser.sh",
+    "change-analyzer": "lib/change-analyzer.sh",
+    "test-runners": "lib/test-runners.sh",
+    "test-executor": "lib/test-executor.sh",
+    "build-executor": "lib/build-executor.sh",
+    "deploy-executor": "lib/deploy-executor.sh",
+    "docker-utils": "lib/docker-utils.sh",
+    "monitor-executor": "lib/monitor-executor.sh",
+    "status-reporter": "lib/status-reporter.sh",
+    "health-check": "lib/health-check.sh",
+    "notify": "lib/notify.sh"
   },
   "config": {
     "state_dir": "state",
