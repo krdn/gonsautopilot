@@ -1,0 +1,21 @@
+{
+  "name": "krdn-gonsautopilot",
+  "owner": {
+    "name": "Gon Kim",
+    "email": "krdn.net@gmail.com"
+  },
+  "metadata": {
+    "description": "Fullstack auto test/deploy pipeline plugins",
+    "homepage": "https://github.com/krdn/gonsautopilot"
+  },
+  "plugins": [
+    {
+      "name": "gonsautopilot",
+      "version": "1.0.0",
+      "source": ".",
+      "description": "Fullstack auto test/deploy pipeline - git push one shot for analyze, test, build, deploy, verify",
+      "category": "deployment",
+      "homepage": "https://github.com/krdn/gonsautopilot/wiki"
+    }
+  ]
+}
